@@ -2,6 +2,7 @@ import "./Navbar.css";
 import logoImage from "../../assets/logo.png";
 import EnrollFormModal from "../EnrollFormModal/EnrollFormModal";
 import { useState } from "react";
+import GoogleLogin from "../../GoogleLogin/GoogleLogin";
 
 function Navbar() {
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +21,7 @@ function Navbar() {
         <li>Testimonials</li>
         <li>Contact</li>
       </ul>
+      <GoogleLogin />
       <button className="navbar-btn" onClick={openModal}>
         Enroll Now
       </button>
