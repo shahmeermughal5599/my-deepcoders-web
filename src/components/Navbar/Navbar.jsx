@@ -1,5 +1,5 @@
 import "./Navbar.css";
-import logoImage from "../../assets/Logo.png";
+import logoImage from "../../assets/logo.png";
 import EnrollFormModal from "../EnrollFormModal/EnrollFormModal";
 import { useState } from "react";
 
