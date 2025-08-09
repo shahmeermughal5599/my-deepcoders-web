@@ -1,6 +1,6 @@
 // src/components/Login.jsx
 import React from "react";
-import { auth, provider } from "../../firebaseConfig"; // ✅ correct relative path
+import { auth, provider } from "../../firebaseConfig";
 import { signInWithPopup } from "firebase/auth";
 
 const GoogleLogin = () => {
@@ -16,10 +16,32 @@ const GoogleLogin = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
       <button
         onClick={handleLogin}
-        className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+        style={{
+          backgroundColor: "#2563EB", // blue-600
+          color: "white",
+          padding: "12px 24px",
+          borderRadius: "0.375rem",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "16px",
+          transition: "background-color 0.2s ease",
+        }}
+        onMouseOver={(e) => {
+          e.target.style.backgroundColor = "#1D4ED8"; // blue-700
+        }}
+        onMouseOut={(e) => {
+          e.target.style.backgroundColor = "#2563EB"; // blue-600
+        }}
       >
         Continue with Google
       </button>
