@@ -1,7 +1,7 @@
-import Features from "./components/Features/Features";
 import Hero from "./components/Hero/Hero";
 import Navbar from "./components/Navbar/Navbar";
-import PopularCourses from "./components/Courses/Courses";
+import Features from "./components/Features/Features";
+// import Courses from "./components/Courses/Courses";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Navbar />
       <Hero />
       <Features />
-      <PopularCourses />
+      {/* <Courses /> */}
     </>
   );
 }

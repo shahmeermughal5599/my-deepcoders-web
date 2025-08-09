@@ -1,30 +1,142 @@
-import "./EnrollFormModal.css";
+// src/components/EnrollForm.jsx
+import React, { useState } from "react";
+import { signInWithPopup } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
 
-function EnrollFormModal({ onClose }) {
+const EnrollForm = ({ formData, setFormData, setShowModal, showModal }) => {
+  // Form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addDoc(collection(db, "enrollments"), formData);
+      alert("✅ Enrollment submitted successfully!");
+      setIsModalOpen(false);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        course: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error saving enrollment:", error);
+    }
+  };
+
   return (
-    <div className="enroll-form-backdrop">
-      <div className="enroll-form-container">
-        <button className="close-btn" onClick={onClose}>
-          ×
-        </button>
-        <h2>Enroll Now</h2>
-        <form>
-          <input type="text" placeholder="Full Name" required />
-          <input type="email" placeholder="Email Address" required />
-          <input type="tel" placeholder="Phone Number" required />
-          <select>
-            <option value="">Select Course</option>
-            <option value="frontend">Frontend Development</option>
-            <option value="backend">Backend Development</option>
-            <option value="frontend">Full Stack Development</option>
-            <option value="App">Mobile App Development</option>
-          </select>
-          <textarea placeholder="Why do you want to join?" rows="4" />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    </div>
-  );
-}
+    <>
+      {/* Modal */}
+      {showModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "9999",
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              width: "400px",
+            }}
+          >
+            <h2>Enroll Form</h2>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                placeholder="Full Name"
+                required
+                style={{ width: "100%", marginBottom: "10px" }}
+              />
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                placeholder="Email"
+                required
+                style={{ width: "100%", marginBottom: "10px" }}
+              />
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Password"
+                required
+                style={{ width: "100%", marginBottom: "10px" }}
+              />
+              <select
+                value={formData.course}
+                onChange={(e) =>
+                  setFormData({ ...formData, course: e.target.value })
+                }
+                required
+                style={{ width: "100%", marginBottom: "10px" }}
+              >
+                <option value="">Select Course</option>
+                <option value="React">React</option>
+                <option value="Next.js">Next.js</option>
+                <option value="JavaScript">JavaScript</option>
+              </select>
+              <textarea
+                value={formData.message}
+                onChange={(e) =>
+                  setFormData({ ...formData, message: e.target.value })
+                }
+                placeholder="Your message"
+                style={{ width: "100%", marginBottom: "10px" }}
+              ></textarea>
 
-export default EnrollFormModal;
+              <button
+                type="submit"
+                style={{
+                  backgroundColor: "#2563EB",
+                  color: "white",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Submit
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                style={{
+                  marginLeft: "10px",
+                  backgroundColor: "gray",
+                  color: "white",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Close
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default EnrollForm;
