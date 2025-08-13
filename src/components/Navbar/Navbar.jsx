@@ -1,7 +1,11 @@
 import "./Navbar.css";
 import logoImage from "../../assets/logo.png";
-import { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useEffect, useState } from "react";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth, provider } from "../../../firebaseConfig";
 import googleLogo from "../../assets/GoogleLogo.png";
 
@@ -13,12 +17,47 @@ function Navbar() {
     userName: localStorage.getItem("userName"),
   });
 
+  // Firebase Auth listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser({
+          token: localStorage.getItem("token"),
+          photo: currentUser.photoURL,
+          userName: currentUser.displayName,
+        });
+      } else {
+        // User deleted or logged out
+        localStorage.clear();
+        setUser({
+          token: null,
+          photo: null,
+          userName: null,
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setShowConfirm(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const startGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const loggedUser = result.user;
-      console.log(loggedUser);
-
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const accessToken = credential.accessToken;
 
@@ -26,7 +65,6 @@ function Navbar() {
       localStorage.setItem("photo", loggedUser.photoURL);
       localStorage.setItem("userName", loggedUser.displayName);
 
-      // Update state
       setUser({
         token: accessToken,
         photo: loggedUser.photoURL,
@@ -48,12 +86,11 @@ function Navbar() {
 
         <ul className="nav-links">
           <li>Home</li>
+          <li>About</li>
           <li>Courses</li>
-          <li>Testimonials</li>
           <li>Contact</li>
         </ul>
 
-        {/* Show Enroll Now button if user not logged in */}
         {!user.token ? (
           <button
             onClick={() => setShowConfirm(true)}
@@ -75,10 +112,10 @@ function Navbar() {
               justifyContent: "center",
               flexDirection: "row-reverse",
               alignItems: "center",
-              // textDecoration: "underline",
               fontWeight: "bold",
               fontSize: "18px",
               color: "#764cff",
+              marginRight: "15px",
               gap: 10,
             }}
           >
@@ -93,8 +130,7 @@ function Navbar() {
                 border: "2px solid #764cff",
               }}
             />
-            <p> {user.userName}</p>
-            <p></p>
+            <p>{user.userName}</p>
           </div>
         )}
       </nav>

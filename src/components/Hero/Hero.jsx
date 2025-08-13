@@ -2,7 +2,6 @@ import "./Hero.css";
 import heroImage from "../../assets/hero-img.png";
 import { FaSearch } from "react-icons/fa";
 import { CircularBadge } from "../CircularBadge/CircularBadge";
-import EnrollFormModal from "../EnrollFormModal/EnrollFormModal";
 import { useState } from "react";
 
 function Hero() {
@@ -15,12 +14,12 @@ function Hero() {
     <>
       <section className="hero">
         <div className="hero-left">
-          <h1>Level Up Your Learning Journey</h1>
+          <h1>Level Up Your Coding Journey</h1>
           <p>
-            Interactive lessons, expert guidance, and real results — all in one
-            place, anytime you need.
+            Deep Coders — Orangi Town’s Premier Hub for Future Tech Leaders.
+            Founded by Shahmeer Mughal & Muhammad Ali Mughal.
           </p>
-          <button onClick={() => setShowModal(true)}>Enroll Now</button>
+          <button onClick={() => setShowModal(true)}>Contact Now </button>
 
           <div className="review">
             <div className="avatars">
@@ -31,7 +30,7 @@ function Hero() {
             </div>
             <div className="stars">
               <span className="star-icons">⭐⭐⭐⭐</span>
-              <span className="review-text">10000+ Review of our courses</span>
+              <span className="review-text">100+ Reviews of our Courses</span>
             </div>
           </div>
         </div>
@@ -49,7 +48,6 @@ function Hero() {
           />
           <FaSearch className="search-icon" />
         </div>
-        {showModal && <EnrollFormModal onClose={closeModal} />}
       </div>
     </>
   );
