@@ -14,7 +14,6 @@ const EnrollForm = ({ formData, setFormData, setShowModal, showModal }) => {
       setFormData({
         name: "",
         email: "",
-        password: "",
         course: "",
         message: "",
       });
@@ -71,16 +70,7 @@ const EnrollForm = ({ formData, setFormData, setShowModal, showModal }) => {
                 required
                 style={{ width: "100%", marginBottom: "10px" }}
               />
-              <input
-                type="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                placeholder="Password"
-                required
-                style={{ width: "100%", marginBottom: "10px" }}
-              />
+
               <select
                 value={formData.course}
                 onChange={(e) =>

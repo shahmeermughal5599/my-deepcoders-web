@@ -1,112 +1,132 @@
 import "./Navbar.css";
 import logoImage from "../../assets/logo.png";
-import EnrollFormModal from "../EnrollFormModal/EnrollFormModal";
 import { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../../firebaseConfig";
+import googleLogo from "../../assets/GoogleLogo.png";
 
 function Navbar() {
-  const [showModal, setShowModal] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [user, setUser] = useState({
-    photo: localStorage.getItem("photo"),
     token: localStorage.getItem("token"),
-  });
-  const photoURi = localStorage.getItem("photo");
-  console.log("photo", photoURi);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    course: "",
-    message: "",
+    photo: localStorage.getItem("photo"),
+    userName: localStorage.getItem("userName"),
   });
 
-  // Enroll Now button click
-  const handleGoogleLogin = async () => {
-    // Step 1: Ask user before Google login
-    const proceed = window.confirm("Continue with Google to enroll?");
-    if (!proceed) return;
-
+  const startGoogleLogin = async () => {
     try {
-      // Step 2: Google Auth popup
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      const loggedUser = result.user;
+      console.log(loggedUser);
 
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const accessToken = credential.accessToken;
 
       localStorage.setItem("token", accessToken);
-      localStorage.setItem("photo", user.photoURL);
+      localStorage.setItem("photo", loggedUser.photoURL);
+      localStorage.setItem("userName", loggedUser.displayName);
 
+      // Update state
       setUser({
         token: accessToken,
-        photo: user.photoURL,
+        photo: loggedUser.photoURL,
+        userName: loggedUser.displayName,
       });
-      console.log("User Info:", {
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL,
-      });
-      setShowModal(true);
-      // Step 3: Auto-fill name & email from Google
-      setFormData((prev) => ({
-        ...prev,
-        name: user.displayName || "",
-        email: user.email || "",
-      }));
 
-      // Step 4: Open modal after Google login
-      setIsModalOpen(true);
+      setShowConfirm(false);
     } catch (error) {
       console.error("Google Sign-in Error:", error);
     }
   };
 
-  const handleLougout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("photo");
-    setUser({});
-  };
-  const closeModal = () => setShowModal(false);
-
   return (
-    <nav className="navbar">
-      <div className="logo">
-        <img src={logoImage} alt="logo" />
-      </div>
-      <ul className="nav-links">
-        <li>Home</li>
-        <li>Courses</li>
-        <li>Testimonials</li>
-        <li>Contact</li>
-      </ul>
+    <>
+      <nav className="navbar">
+        <div className="logo">
+          <img src={logoImage} alt="logo" />
+        </div>
 
-      {user.token ? (
-        <button onClick={handleLougout}>Logout</button>
-      ) : (
-        <button
-          onClick={handleGoogleLogin}
-          style={{
-            backgroundColor: "rgba(118, 76, 255, 0.991)",
-            color: "white",
-            padding: "12px 25px",
-            border: "none",
-            borderRadius: "35px",
-            cursor: "pointer",
-          }}
-        >
-          Enroll Now
-        </button>
+        <ul className="nav-links">
+          <li>Home</li>
+          <li>Courses</li>
+          <li>Testimonials</li>
+          <li>Contact</li>
+        </ul>
+
+        {/* Show Enroll Now button if user not logged in */}
+        {!user.token ? (
+          <button
+            onClick={() => setShowConfirm(true)}
+            style={{
+              backgroundColor: "rgba(118, 76, 255, 0.991)",
+              color: "white",
+              padding: "12px 25px",
+              border: "none",
+              borderRadius: "35px",
+              cursor: "pointer",
+            }}
+          >
+            Enroll Now
+          </button>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row-reverse",
+              alignItems: "center",
+              // textDecoration: "underline",
+              fontWeight: "bold",
+              fontSize: "18px",
+              color: "#764cff",
+              gap: 10,
+            }}
+          >
+            <img
+              src={user.photo}
+              alt={"pfp"}
+              style={{
+                width: "35px",
+                height: "35px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid #764cff",
+              }}
+            />
+            <p> {user.userName}</p>
+            <p></p>
+          </div>
+        )}
+      </nav>
+
+      {showConfirm && (
+        <div className="confirm-overlay">
+          <div className="confirm-modal">
+            <h2 className="confirm-title">Join Us with Google</h2>
+            <p className="confirm-subtitle">
+              Sign in with Google, then explore site and get in touch!
+            </p>
+
+            <div className="confirm-buttons">
+              <button className="confirm-yes" onClick={startGoogleLogin}>
+                <img
+                  src={googleLogo}
+                  alt="Google"
+                  style={{ width: "20px", marginRight: "8px" }}
+                />
+                Continue with Google
+              </button>
+              <button
+                className="confirm-no"
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-
-      <EnrollFormModal
-        formData={formData}
-        setFormData={setFormData}
-        showModal={showModal}
-        setShowModal={closeModal}
-      />
-    </nav>
+    </>
   );
 }
 

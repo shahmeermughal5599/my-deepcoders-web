@@ -1,3 +1,103 @@
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.confirm-modal {
+  background: white;
+  padding: 30px 25px;
+  border-radius: 18px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.4s ease;
+}
+
+.confirm-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+.confirm-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.confirm-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.confirm-yes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: #444;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.confirm-yes:hover {
+  background: #f9fafb;
+  transform: scale(1.05);
+  border-color: #ccc;
+}
+
+.confirm-no {
+  background: linear-gradient(135deg, #764cff, #764cff);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s ease-in-out;
+}
+
+.confirm-no:hover {
+  transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -15,7 +115,7 @@
   display: flex;
   gap: 60px;
   list-style: none;
-  margin-right: 100px;
+  margin-right: 50px;
 }
 
 .nav-links li {
